@@ -9,9 +9,8 @@
 ## Features
 
 - Reverse search functionality to identify item sequences based on desired outcomes
-- Interactive web interface powered by Streamlit
-- Modular codebase with clear separation of concerns
-
+- Focus on either Cheapest Material Cost or Most Profit
+- Control how many mixes
 ## Live Demo
 
 You can try out the app instantly in your browser:
