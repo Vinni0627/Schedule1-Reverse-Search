@@ -1,5 +1,5 @@
 import streamlit as st
-from reverse import load_items, find_item_sequence, BASE_PRICES, EFFECT_MULTIPLIERS, INGREDIENT_PRICES, next_fibonacci
+from reverse import load_items, find_item_sequence, BASE_PRICES, EFFECT_MULTIPLIERS, INGREDIENT_PRICES
 import time
 
 # Set page config
@@ -54,8 +54,8 @@ with st.sidebar:
     
     # Add depth limit control
     st.header("Search Settings")
-    min_depth = len(selected_effects) + 2 if selected_effects else 3
-    max_fib = next_fibonacci(int(1.5 * min_depth))
+    min_depth = 1
+    max_fib = 15
     depth_limit = st.slider(
         "Maximum step length",
         min_value=min_depth,
@@ -165,12 +165,3 @@ if selected_effects:
                     st.error("No solution found within the time limit. Try increasing the maximum search depth or check if the desired effects are achievable.")
 else:
     st.info("Please select at least one effect from the sidebar.")
-
-def next_fibonacci(n):
-    """
-    Returns the next Fibonacci number after n.
-    """
-    a, b = 0, 1
-    while b <= n:
-        a, b = b, a + b
-    return b 

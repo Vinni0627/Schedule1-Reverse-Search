@@ -5,15 +5,6 @@ import concurrent.futures
 from threading import Lock
 from queue import Queue
 
-def next_fibonacci(n):
-    """
-    Returns the next Fibonacci number after n.
-    """
-    a, b = 0, 1
-    while b <= n:
-        a, b = b, a + b
-    return b
-
 # Pricing information
 BASE_PRICES = {
     "Weed": 35,
@@ -215,10 +206,6 @@ def find_item_sequence(required_effects, items_data, optimize_for="cost", progre
 
     Returns: (list_of_items_used, final_effects_set, cost, profit) or (None, None, None, None) if no solution.
     """
-    # Calculate maximum depth based on number of effects if not provided
-    if max_depth is None:
-        base_depth = len(required_effects) + 2
-        max_depth = next_fibonacci(base_depth) if optimize_for == "cost" else next_fibonacci(base_depth + 2)
 
     # Create shared state
     search_state = SearchState()
