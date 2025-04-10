@@ -1,198 +1,196 @@
 {
-    "Cuke": {
-      "base_effect": "Energizing",
-      "replacements": [
-        ["Euphoric", "Laxative"],
-        ["Foggy", "Cyclopean"],
-        ["Gingeritis", "Thought-Provoking"],
-        ["Munchies", "Athletic"],
-        ["Slippery", "Munchies"],
-        ["Sneaky", "Paranoia"],
-        ["Toxic", "Euphoric"]
-      ]
-    },
-    "Flu Medicine": {
-      "base_effect": "Sedating",
-      "replacements": [
-        ["Athletic", "Munchies"],
-        ["Calming", "Bright-Eyed"],
-        ["Cyclopean", "Foggy"],
-        ["Electrifying", "Refreshing"],
-        ["Euphoric", "Toxic"],
-        ["Focused", "Calming"],
-        ["Laxative", "Euphoric"],
-        ["Munchies", "Slippery"],
-        ["Shrinking", "Paranoia"],
-        ["Thought-Provoking", "Gingeritis"]
-      ]
-    },
-    "Gasoline": {
-      "base_effect": "Toxic",
-      "replacements": [
-        ["Disorienting", "Glowing"],
-        ["Electrifying", "Disorienting"],
-        ["Energizing", "Euphoric"],
-        ["Euphoric", "Spicy"],
-        ["Gingeritis", "Smelly"],
-        ["Jennerising", "Sneaky"],
-        ["Laxative", "Foggy"],
-        ["Munchies", "Sedating"],
-        ["Paranoia", "Calming"],
-        ["Shrinking", "Focused"],
-        ["Sneaky", "ic TTrophunder"]
-      ]
-    },
-    "Donut": {
-      "base_effect": "Calorie-Dense",
-      "replacements": [
-        ["Anti-Gravity", "Slippery"],
-        ["Balding", "Sneaky"],
-        ["Calorie-Dense", "Explosive"],
-        ["Focused", "Euphoric"],
-        ["Jennerising", "Gingeritis"],
-        ["Munchies", "Calming"],
-        ["Shrinking", "Energizing"]
-      ]
-    },
-    "Energy Drink": {
-      "base_effect": "Athletic",
-      "replacements": [
-        ["Disorienting", "Electrifying"],
-        ["Euphoric", "Energizing"],
-        ["Focused", "Shrinking"],
-        ["Foggy", "Laxative"],
-        ["Glowing", "Disorienting"],
-        ["Schizophrenia", "Balding"],
-        ["Sedating", "Munchies"],
-        ["Spicy", "Euphoric"],
-        ["Tropic Thunder", "Sneaky"]
-      ]
-    },
-    "Mouth Wash": {
-      "base_effect": "Balding",
-      "replacements": [
-        ["Calming", "Anti-Gravity"],
-        ["Calorie-Dense", "Sneaky"],
-        ["Explosive", "Sedating"],
-        ["Focused", "Jennerising"]
-      ]
-    },
-    "Motor Oil": {
-      "base_effect": "Slippery",
-      "replacements": [
-        ["Energizing", "Munchies"],
-        ["Euphoric", "Sedating"],
-        ["Foggy", "Toxic"],
-        ["Munchies", "Schizophrenia"],
-        ["Paranoia", "Anti-Gravity"]
-      ]
-    },
-    "Banana": {
-      "base_effect": "Gingeritis",
-      "replacements": [
-        ["Calming", "Sneaky"],
-        ["Cyclopean", "Energizing"],
-        ["Disorienting", "Focused"],
-        ["Energizing", "Thought-Provoking"],
-        ["Focused", "Seizure-Inducing"],
-        ["Long Faced", "Refreshing"],
-        ["Paranoia", "Jennerising"],
-        ["Smelly", "Anti-Gravity"],
-        ["Toxic", "Smelly"]
-      ]
-    },
-    "Chili": {
-      "base_effect": "Spicy",
-      "replacements": [
-        ["Anti-Gravity", "Tropic Thunder"],
-        ["Athletic", "Euphoric"],
-        ["Laxative", "Long Faced"],
-        ["Munchies", "Toxic"],
-        ["Shrinking", "Refreshing"],
-        ["Sneaky", "Bright-Eyed"],
-        ["Thought-Provoking", "Focused"]
-      ]
-    },
-    "Iodine": {
-      "base_effect": "Jennerising",
-      "replacements": [
-        ["Calming", "Balding"],
-        ["Calorie-Dense", "Gingeritis"],
-        ["Euphoric", "Seizure-Inducing"],
-        ["Foggy", "Paranoia"],
-        ["Refreshing", "Thought-Provoking"],
-        ["Toxic", "Sneaky"]
-      ]
-    },
-    "Paracetamol": {
-      "base_effect": "Sneaky",
-      "replacements": [
-        ["Calming", "Slippery"],
-        ["Electrifying", "Athletic"],
-        ["Energizing", "Paranoia"],
-        ["Focused", "Gingeritis"],
-        ["Foggy", "Calming"],
-        ["Glowing", "Toxic"],
-        ["Munchies", "Anti-Gravity"],
-        ["Paranoia", "Balding"],
-        ["Spicy", "Bright-Eyed"],
-        ["Toxic", "Tropic Thunder"]
-      ]
-    },
-    "Viagra": {
-      "base_effect": "Tropic Thunder",
-      "replacements": [
-        ["Athletic", "Sneaky"],
-        ["Disorienting", "Toxic"],
-        ["Euphoric", "Bright-Eyed"],
-        ["Laxative", "Calming"],
-        ["Shrinking", "Gingeritis"]
-      ]
-    },
-    "Horse Semen": {
-      "base_effect": "Long Faced",
-      "replacements": [
-        ["Anti-Gravity", "Calming"],
-        ["Gingeritis", "Refreshing"],
-        ["Seizure-Inducing", "Energizing"],
-        ["Thought-Provoking", "Electrifying"]
-      ]
-    },
-    "Mega Bean": {
-      "base_effect": "Foggy",
-      "replacements": [
-        ["Athletic", "Laxative"],
-        ["Calming", "Glowing"],
-        ["Energizing", "Cyclopean"],
-        ["Focused", "Disorienting"],
-        ["Jennerising", "Paranoia"],
-        ["Seizure-Inducing", "Focused"],
-        ["Shrinking", "Electrifying"],
-        ["Slippery", "Toxic"],
-        ["Sneaky", "Calming"],
-        ["Thought-Provoking", "Energizing"]
-      ]
-    },
-    "Addy": {
-      "base_effect": "Thought-Provoking",
-      "replacements": [
-        ["Explosive", "Euphoric"],
-        ["Foggy", "Energizing"],
-        ["Glowing", "Refreshing"],
-        ["Long Faced", "Electrifying"],
-        ["Sedating", "Gingeritis"]
-      ]
-    },
-    "Battery": {
-      "base_effect": "Bright-Eyed",
-      "replacements": [
-        ["Cyclopean", "Glowing"],
-        ["Electrifying", "Euphoric"],
-        ["Euphoric", "Zombifying"],
-        ["Laxative", "Calorie-Dense"],
-        ["Munchies", "Tropic Thunder"],
-        ["Shrinking", "Munchies"]
-      ]
-    }
+  "Cuke": {
+    "base_effect": "Energizing",
+    "replacements": [
+      ["Euphoric", "Laxative"],
+      ["Foggy", "Cyclopean"],
+      ["Gingeritis", "Thought-Provoking"],
+      ["Munchies", "Athletic"],
+      ["Slippery", "Munchies"],
+      ["Sneaky", "Paranoia"],
+      ["Toxic", "Euphoric"]
+    ]
+  },
+  "Flu Medicine": {
+    "base_effect": "Sedating",
+    "replacements": [
+      ["Athletic", "Munchies"],
+      ["Calming", "Bright-Eyed"],
+      ["Cyclopean", "Foggy"],
+      ["Electrifying", "Refreshing"],
+      ["Euphoric", "Toxic"],
+      ["Focused", "Calming"],
+      ["Laxative", "Euphoric"],
+      ["Munchies", "Slippery"],
+      ["Shrinking", "Paranoia"],
+      ["Thought-Provoking", "Gingeritis"]
+    ]
+  },
+  "Gasoline": {
+    "base_effect": "Toxic",
+    "replacements": [
+      ["Disorienting", "Glowing"],
+      ["Electrifying", "Disorienting"],
+      ["Energizing", "Euphoric"],
+      ["Euphoric", "Spicy"],
+      ["Gingeritis", "Smelly"],
+      ["Jennerising", "Sneaky"],
+      ["Laxative", "Foggy"],
+      ["Munchies", "Sedating"],
+      ["Paranoia", "Calming"],
+      ["Shrinking", "Focused"],
+      ["Sneaky", "Tropic Thunder"]
+    ]
+  },
+  "Donut": {
+    "base_effect": "Calorie-Dense",
+    "replacements": [
+      ["Anti-Gravity", "Slippery"],
+      ["Balding", "Sneaky"],
+      ["Calorie-Dense", "Explosive"],
+      ["Focused", "Euphoric"],
+      ["Jennerising", "Gingeritis"],
+      ["Munchies", "Calming"],
+      ["Shrinking", "Energizing"]
+    ]
+  },
+  "Energy Drink": {
+    "base_effect": "Athletic",
+    "replacements": [
+      ["Disorienting", "Electrifying"],
+      ["Euphoric", "Energizing"],
+      ["Focused", "Shrinking"],
+      ["Foggy", "Laxative"],
+      ["Glowing", "Disorienting"],
+      ["Schizophrenia", "Balding"],
+      ["Sedating", "Munchies"],
+      ["Spicy", "Euphoric"],
+      ["Tropic Thunder", "Sneaky"]
+    ]
+  },
+  "Mouth Wash": {
+    "base_effect": "Balding",
+    "replacements": [
+      ["Calming", "Anti-Gravity"],
+      ["Calorie-Dense", "Sneaky"],
+      ["Explosive", "Sedating"],
+      ["Focused", "Jennerising"]
+    ]
+  },
+  "Motor Oil": {
+    "base_effect": "Slippery",
+    "replacements": [
+      ["Energizing", "Munchies"],
+      ["Euphoric", "Sedating"],
+      ["Foggy", "Toxic"],
+      ["Munchies", "Schizophrenia"],
+      ["Paranoia", "Anti-Gravity"]
+    ]
+  },
+  "Banana": {
+    "base_effect": "Gingeritis",
+    "replacements": [
+      ["Calming", "Sneaky"],
+      ["Cyclopean", "Energizing"],
+      ["Disorienting", "Focused"],
+      ["Energizing", "Thought-Provoking"],
+      ["Focused", "Seizure-Inducing"],
+      ["Long Faced", "Refreshing"],
+      ["Paranoia", "Jennerising"],
+      ["Smelly", "Anti-Gravity"],
+      ["Toxic", "Smelly"]
+    ]
+  },
+  "Chili": {
+    "base_effect": "Spicy",
+    "replacements": [
+      ["Anti-Gravity", "Tropic Thunder"],
+      ["Athletic", "Euphoric"],
+      ["Laxative", "Long Faced"],
+      ["Munchies", "Toxic"],
+      ["Shrinking", "Refreshing"],
+      ["Sneaky", "Bright-Eyed"]
+    ]
+  },
+  "Iodine": {
+    "base_effect": "Jennerising",
+    "replacements": [
+      ["Calming", "Balding"],
+      ["Calorie-Dense", "Gingeritis"],
+      ["Euphoric", "Seizure-Inducing"],
+      ["Foggy", "Paranoia"],
+      ["Refreshing", "Thought-Provoking"],
+      ["Toxic", "Sneaky"]
+    ]
+  },
+  "Paracetamol": {
+    "base_effect": "Sneaky",
+    "replacements": [
+      ["Calming", "Slippery"],
+      ["Electrifying", "Athletic"],
+      ["Energizing", "Paranoia"],
+      ["Focused", "Gingeritis"],
+      ["Foggy", "Calming"],
+      ["Glowing", "Toxic"],
+      ["Munchies", "Anti-Gravity"],
+      ["Paranoia", "Balding"],
+      ["Spicy", "Bright-Eyed"],
+      ["Toxic", "Tropic Thunder"]
+    ]
+  },
+  "Viagra": {
+    "base_effect": "Tropic Thunder",
+    "replacements": [
+      ["Athletic", "Sneaky"],
+      ["Disorienting", "Toxic"],
+      ["Euphoric", "Bright-Eyed"],
+      ["Laxative", "Calming"],
+      ["Shrinking", "Gingeritis"]
+    ]
+  },
+  "Horse Semen": {
+    "base_effect": "Long Faced",
+    "replacements": [
+      ["Anti-Gravity", "Calming"],
+      ["Gingeritis", "Refreshing"],
+      ["Seizure-Inducing", "Energizing"],
+      ["Thought-Provoking", "Electrifying"]
+    ]
+  },
+  "Mega Bean": {
+    "base_effect": "Foggy",
+    "replacements": [
+      ["Athletic", "Laxative"],
+      ["Calming", "Glowing"],
+      ["Energizing", "Cyclopean"],
+      ["Focused", "Disorienting"],
+      ["Jennerising", "Paranoia"],
+      ["Seizure-Inducing", "Focused"],
+      ["Shrinking", "Electrifying"],
+      ["Slippery", "Toxic"],
+      ["Sneaky", "Calming"],
+      ["Thought-Provoking", "Energizing"]
+    ]
+  },
+  "Addy": {
+    "base_effect": "Thought-Provoking",
+    "replacements": [
+      ["Explosive", "Euphoric"],
+      ["Foggy", "Energizing"],
+      ["Glowing", "Refreshing"],
+      ["Long Faced", "Electrifying"],
+      ["Sedating", "Gingeritis"]
+    ]
+  },
+  "Battery": {
+    "base_effect": "Bright-Eyed",
+    "replacements": [
+      ["Cyclopean", "Glowing"],
+      ["Electrifying", "Euphoric"],
+      ["Euphoric", "Zombifying"],
+      ["Laxative", "Calorie-Dense"],
+      ["Munchies", "Tropic Thunder"],
+      ["Shrinking", "Munchies"]
+    ]
   }
-  
+}

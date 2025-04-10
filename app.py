@@ -1,5 +1,5 @@
 import streamlit as st
-from reverse import load_items, find_item_sequence, BASE_PRICES, EFFECT_MULTIPLIERS, INGREDIENT_PRICES
+from reverse import load_items, find_item_sequence, BASE_PRICES, EFFECT_MULTIPLIERS, INGREDIENT_PRICES, apply_item
 import time
 
 # Set page config
@@ -128,6 +128,13 @@ if selected_effects:
                 if sequence:
                     st.success("Found a solution!")
                     
+                    # Compute intermediate effects for each step
+                    intermediate_effects = []
+                    current_effects = set()
+                    for item in sequence:
+                        current_effects = apply_item(current_effects, item, items_data)
+                        intermediate_effects.append(current_effects.copy())  # Store a copy
+                    
                     # Recipe details
                     st.subheader("Recipe Steps")
                     total_cost = 0
@@ -135,9 +142,21 @@ if selected_effects:
                         item_cost = INGREDIENT_PRICES[item]
                         total_cost += item_cost
                         st.markdown(f"{i}. **{item}** (${item_cost})")
-                        # Show item details
+                        
+                        # Show item details with current effects
                         with st.expander(f"Details for {item}"):
+                            
+                            # Show current effects after this step
+                            current_step_effects = intermediate_effects[i-1]
+                            st.markdown("**Current Effects:**")
+                            for effect in sorted(current_step_effects):
+                                st.markdown(f"- {effect}")
+                                
+                            
                             st.markdown(f"**Base Effect:** {items_data[item]['base_effect']}")
+                            
+                            
+                            # Show replacements
                             if items_data[item]['replacements']:
                                 st.markdown("**Replacements:**")
                                 for old_e, new_e in items_data[item]['replacements']:
@@ -150,11 +169,11 @@ if selected_effects:
                         st.metric("Total Ingredient Cost", f"${total_cost}")
                     with col2:
                         final_price = BASE_PRICES[base_product] * (1 + sum(EFFECT_MULTIPLIERS.get(effect, 0) for effect in final))
-                        st.metric("Final Product Price", f"${final_price:.2f}")
-                        st.metric("Potential Profit", f"${final_price - total_cost:.2f}")
+                        st.metric("Final Product Price", f"${int(final_price)}")
+                        st.metric("Potential Profit", f"${int(final_price - total_cost)}")
                     with col3:
-                        st.metric("Final Product Price with 1.6x Rule", f"${int(final_price*1.6):.2f}")
-                        st.metric("Potential Profit with 1.6x Rule", f"${int((final_price - total_cost)*1.6):.2f}")
+                        st.metric("Final Product Price with 1.6x Rule", f"${int(final_price*1.6)}")
+                        st.metric("Potential Profit with 1.6x Rule", f"${int(final_price*1.6) - total_cost}")
 
                     # Final effects
                     st.subheader("Final Effects")

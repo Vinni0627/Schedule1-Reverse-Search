@@ -8,7 +8,9 @@ from queue import Queue
 # Pricing information
 BASE_PRICES = {
     "Weed": 35,
-    "Meth": 70,
+    "Poor Quality Meth": 60,
+    "Meth": 80,
+    "High-Quality Meth": 110,
     "Cocaine": 150
 }
 
