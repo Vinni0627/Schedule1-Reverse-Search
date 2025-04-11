@@ -30,6 +30,7 @@ No installation required!
    ```bash
    git clone https://github.com/Vinni0627/Schedule1-Reverse-Search.git
    cd Schedule1-Reverse-Search
+   pip install -r requirements.txt
    
 2. **Standalone Tool**
     ```bash
