@@ -7,7 +7,10 @@ from queue import Queue
 
 # Pricing information
 BASE_PRICES = {
-    "Weed": 35,
+    "OG Kush": 30,
+    "Sour Diesel": 35,
+    "Green Crack": 40,
+    "Grandaddy Purple": 45, 
     "Poor Quality Meth": 60,
     "Meth": 80,
     "High-Quality Meth": 110,
