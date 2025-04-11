@@ -57,11 +57,11 @@ with st.sidebar:
     min_depth = 1
     max_fib = 15
     depth_limit = st.slider(
-        "Maximum step length",
+        "Maximum mixing step length",
         min_value=min_depth,
         max_value=max_fib,
         value=min_depth,
-        help=f"Higher values may find better solutions but take longer to search. Next Fibonacci number: {max_fib}"
+        help=f"Higher values may find better solutions but take longer to search."
     )
 
 # Main content
@@ -71,10 +71,15 @@ if selected_effects:
         st.markdown(f"- {effect}")
     
     # Show warning for complex searches
-    if len(selected_effects) >= 4:
-        st.warning("⚠️ Searching for 4 or more effects may take up to 2 minutes. The search will automatically stop after 2 minutes.")
+    if len(selected_effects) >= 8:
+        st.warning("⚠️ Searching for 8 or more effects may take awhile. The search will automatically stop after 5 minutes.")
+    elif len(selected_effects) >= 6:
+        st.warning("⚠️ Searching for 6 or more effects may take awhile. The search will automatically stop after 3 minutes.")
+    elif len(selected_effects) >= 4:
+        st.warning("⚠️ Searching for 4 or more effects may take awhile. The search will automatically stop after 1 minutes.")
     elif len(selected_effects) >= 3:
-        st.warning("⚠️ Searching for 3 effects may take up to 30 seconds. The search will automatically stop after 30 seconds.")
+        st.warning("⚠️ Searching for 3 or more effects may take awhile. The search will automatically stop after 30 seconds.")
+    
     
     if st.button("Find Recipe"):
         # Create progress elements
@@ -93,14 +98,14 @@ if selected_effects:
             
             # Update status text
             status_text.text("Searching for solution...")
-            depth_text.text(f"Current depth: {depth}")
-            states_text.text(f"States explored: {states:,}")
-            limit_text.text(f"Maximum depth: {max_depth}")
+            depth_text.text(f"Current mixing steps: {depth}")
+            states_text.text(f"Recipes explored: {states:,}")
+            limit_text.text(f"Maximum mixing steps: {max_depth}")
             time_text.text(f"Time elapsed: {elapsed_time:.1f}s")
         
         with st.spinner("Searching for the best sequence..."):
             optimize_for = "cost" if optimization_mode == "Cost (Cheapest Recipe)" else "profit"
-            timeout = 120 if len(selected_effects) >= 4 else 30
+            timeout = 600 if len(selected_effects)>= 8 else (300 if len(selected_effects) >= 6 else (120 if len(selected_effects) >= 4 else 30))
             
             # Create a container for the search results
             result_container = st.empty()
