@@ -2,6 +2,7 @@
 
 **Schedule1-Reverse-Search** is a Python application designed to determine the sequence of items required to achieve specific desired effects.
 
+This project is inspired from the great developers at [schedule1-calculator](https://schedule1-calculator.com/)
 The project was developed using [Cursor.ai](https://www.cursor.so/).
 
 ## Version Compatibility
