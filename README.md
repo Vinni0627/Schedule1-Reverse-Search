@@ -15,11 +15,11 @@ The project was developed using [Cursor.ai](https://www.cursor.so/).
 - Reverse search functionality to identify item sequences based on desired outcomes
 - Focus on either Cheapest Material Cost or Most Profit
 - Control how many mixes
-## Live Demo
+## Live Website
 
 You can try out the app instantly in your browser:
 
-👉 [https://schedule1-reverse-search.streamlit.app/](https://schedule1-reverse-search.streamlit.app/)
+👉 https://huggingface.co/spaces/Vinni0627/Schedule1-Reverse-Search
 
 No installation required!
 
