@@ -14,7 +14,7 @@ st.set_page_config(
 # Title and description
 st.title("Schedule 1 Reverse Recipe Search")
 st.markdown("""
-Find the sequence of items needed to achieve your desired effects
+Find the sequence of items needed to achieve your desired effects or, if no effects are selected, optimize based solely on cost or profit.
 """)
 
 # Load items data
@@ -35,7 +35,7 @@ for item_data in items_data.values():
 # Sidebar with available effects and optimization options
 with st.sidebar:
     st.header("Available Effects")
-    st.markdown("Select the effects you want to achieve:")
+    st.markdown("Select the effects you want to achieve. Leave empty to disregard effect requirements:")
     selected_effects = st.multiselect(
         "Choose effects",
         sorted(list(all_effects)),
@@ -56,118 +56,112 @@ with st.sidebar:
 
     st.header("Search Settings")
     min_depth = 1
-    max_fib = 15
-    depth_limit = st.slider(
-        "Maximum mixing step length",
+    max_depth = 15
+    depth_range = st.slider(
+        "Mixing step range",
         min_value=min_depth,
-        max_value=max_fib,
-        value=min_depth,
-        help=f"Higher values may find better solutions but take longer to search."
+        max_value=max_depth,
+        value=(min_depth, max_depth),
+        help="Select the minimum and maximum number of mixing steps. Higher values may find better solutions but take longer to search."
     )
+    min_steps, max_steps = depth_range
 
-# Main content
+# Main content header
 if selected_effects:
     st.subheader("Desired Effects")
     for effect in selected_effects:
         st.markdown(f"- {effect}")
-
-    if len(selected_effects) >= 8:
-        st.warning("⚠️ Searching for 8 or more effects may take awhile. The search will automatically stop after 5 minutes.")
-    elif len(selected_effects) >= 6:
-        st.warning("⚠️ Searching for 6 or more effects may take awhile. The search will automatically stop after 3 minutes.")
-    elif len(selected_effects) >= 4:
-        st.warning("⚠️ Searching for 4 or more effects may take awhile. The search will automatically stop after 1 minutes.")
-    elif len(selected_effects) >= 3:
-        st.warning("⚠️ Searching for 3 or more effects may take awhile. The search will automatically stop after 30 seconds.")
-
-    if st.button("Find Recipe"):
-        # Progress display
-        progress_bar = st.progress(0)
-        status_text = st.empty()
-        depth_text = st.empty()
-        states_text = st.empty()
-        limit_text = st.empty()
-        time_text = st.empty()
-
-        def update_progress(depth, states, max_depth, elapsed_time):
-            progress = min(depth / max_depth, 1.0)
-            progress_bar.progress(progress)
-            status_text.text("Searching for solution...")
-            depth_text.text(f"Current mixing steps: {depth}")
-            states_text.text(f"Recipes explored: {states:,}")
-            limit_text.text(f"Maximum mixing steps: {max_depth}")
-            time_text.text(f"Time elapsed: {elapsed_time:.1f}s")
-
-        with st.spinner("Searching for the best sequence..."):
-            optimize_for = "cost" if optimization_mode == "Cost (Cheapest Recipe)" else "profit"
-            timeout = 600 if len(selected_effects) >= 8 else (300 if len(selected_effects) >= 6 else (120 if len(selected_effects) >= 4 else 30))
-            result_container = st.empty()
-
-            sequence, final, cost, profit = find_item_sequence(
-                selected_effects,
-                items_data,
-                optimize_for,
-                progress_callback=update_progress,
-                timeout=timeout,
-                max_depth=depth_limit
-            )
-
-            # Clear progress display
-            progress_bar.empty()
-            status_text.empty()
-            depth_text.empty()
-            states_text.empty()
-            limit_text.empty()
-            time_text.empty()
-
-            # Results
-            with result_container.container():
-                if sequence:
-                    st.success("Found a solution!")
-
-                    intermediate_effects = []
-                    current_effects = set()
-                    for item in sequence:
-                        current_effects = apply_item(current_effects, item, items_data)
-                        intermediate_effects.append(current_effects.copy())
-
-                    st.subheader("Recipe Steps")
-                    total_cost = 0
-                    for i, item in enumerate(sequence, 1):
-                        item_cost = INGREDIENT_PRICES[item]
-                        total_cost += item_cost
-                        st.markdown(f"{i}. **{item}** (${item_cost})")
-
-                        with st.expander(f"Details for {item}"):
-                            current_step_effects = intermediate_effects[i - 1]
-                            st.markdown("**Current Recipe Effects:**")
-                            for effect in sorted(current_step_effects):
-                                st.markdown(f"- {effect}")
-
-                            st.markdown(f"**Base Effect:** {items_data[item]['base_effect']}")
-
-                            if items_data[item]['replacements']:
-                                with st.expander(f"**All {item} Effect Replacements:**"):
-                                    for old_e, new_e in items_data[item]['replacements']:
-                                        st.markdown(f"- {old_e} → {new_e}")
-
-                    st.subheader("Cost Analysis")
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        st.metric("Total Ingredient Cost", f"${total_cost}")
-                    with col2:
-                        final_price = BASE_PRICES[base_product] * (1 + sum(EFFECT_MULTIPLIERS.get(effect, 0) for effect in final))
-                        st.metric("Final Product Price", f"${int(final_price)}")
-                        st.metric("Potential Profit", f"${int(final_price - total_cost)}")
-                    with col3:
-                        st.metric("Final Product Price with 1.6x Rule", f"${int(final_price*1.6)}")
-                        st.metric("Potential Profit with 1.6x Rule", f"${int(final_price*1.6) - total_cost}")
-
-                    st.subheader("Final Effects")
-                    for effect in sorted(final):
-                        multiplier = EFFECT_MULTIPLIERS.get(effect, 0)
-                        st.markdown(f"- {effect} (Multiplier: {multiplier:.2f})")
-                else:
-                    st.error("No solution found within the time limit. Try increasing the maximum step length or check if the desired effects are achievable.")
 else:
-    st.info("Please select at least one effect from the sidebar.")
+    st.info("No specific effects selected. The search will optimize based solely on cost or profit.")
+
+if st.button("Find Recipe"):
+    # Progress display
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    depth_text = st.empty()
+    states_text = st.empty()
+    limit_text = st.empty()
+    time_text = st.empty()
+
+    def update_progress(depth, states, max_depth, elapsed_time):
+        progress = min(depth / max_depth, 1.0)
+        progress_bar.progress(progress)
+        status_text.text("Searching for solution...")
+        depth_text.text(f"Current mixing steps: {depth}")
+        states_text.text(f"Recipes explored: {states:,}")
+        limit_text.text(f"Maximum mixing steps: {max_depth}")
+        time_text.text(f"Time elapsed: {elapsed_time:.1f}s")
+
+    with st.spinner("Searching for the best sequence..."):
+        optimize_for = "cost" if optimization_mode == "Cost (Cheapest Recipe)" else "profit"
+        # Set timeout based on number of selected effects (if any)
+        timeout = 600 if len(selected_effects) >= 8 else (300 if len(selected_effects) >= 6 else (120 if len(selected_effects) >= 4 else 30))
+        result_container = st.empty()
+
+        sequence, final, cost, profit = find_item_sequence(
+            selected_effects,
+            items_data,
+            optimize_for,
+            progress_callback=update_progress,
+            timeout=timeout,
+            min_depth=min_steps,
+            max_depth=max_steps
+        )
+
+        # Clear progress display
+        progress_bar.empty()
+        status_text.empty()
+        depth_text.empty()
+        states_text.empty()
+        limit_text.empty()
+        time_text.empty()
+
+        # Display results
+        with result_container.container():
+            if sequence:
+                st.success("Found a solution!")
+
+                intermediate_effects = []
+                current_effects = set()
+                for item in sequence:
+                    current_effects = apply_item(current_effects, item, items_data)
+                    intermediate_effects.append(current_effects.copy())
+
+                st.subheader("Recipe Steps")
+                total_cost = 0
+                for i, item in enumerate(sequence, 1):
+                    item_cost = INGREDIENT_PRICES[item]
+                    total_cost += item_cost
+                    st.markdown(f"{i}. **{item}** (${item_cost})")
+
+                    with st.expander(f"Details for {item}"):
+                        current_step_effects = intermediate_effects[i - 1]
+                        st.markdown("**Current Recipe Effects:**")
+                        for effect in sorted(current_step_effects):
+                            st.markdown(f"- {effect}")
+
+                        st.markdown(f"**Base Effect:** {items_data[item]['base_effect']}")
+
+                        if items_data[item]['replacements']:
+                            with st.expander(f"**All {item} Effect Replacements:**"):
+                                for old_e, new_e in items_data[item]['replacements']:
+                                    st.markdown(f"- {old_e} → {new_e}")
+
+                st.subheader("Cost Analysis")
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Total Ingredient Cost", f"${total_cost}")
+                with col2:
+                    final_price = BASE_PRICES[base_product] * (1 + sum(EFFECT_MULTIPLIERS.get(effect, 0) for effect in final))
+                    st.metric("Final Product Price", f"${int(final_price)}")
+                    st.metric("Potential Profit", f"${int(final_price - total_cost)}")
+                with col3:
+                    st.metric("Final Product Price with 1.6x Rule", f"${int(final_price*1.6)}")
+                    st.metric("Potential Profit with 1.6x Rule", f"${int(final_price*1.6) - total_cost}")
+
+                st.subheader("Final Effects")
+                for effect in sorted(final):
+                    multiplier = EFFECT_MULTIPLIERS.get(effect, 0)
+                    st.markdown(f"- {effect} (Multiplier: {multiplier:.2f})")
+            else:
+                st.error("No solution found within the time limit. Try increasing the maximum step length or check if the desired effects are achievable.")

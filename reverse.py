@@ -125,10 +125,7 @@ def calculate_final_price(base_product, effects):
     total_multiplier = sum(EFFECT_MULTIPLIERS.get(effect, 0) for effect in effects)
     return BASE_PRICES[base_product] * (1 + total_multiplier)
 
-def find_item_sequence_thread(required_effects, items_data, optimize_for, start_state, max_depth, timeout):
-    """
-    Thread worker for finding item sequences.
-    """
+def find_item_sequence_thread(required_effects, items_data, optimize_for, start_state, min_depth, max_depth, timeout):
     required_set = set(required_effects)
     queue = deque([(frozenset(), [], 0)])
     states_explored = 0
@@ -161,9 +158,10 @@ def find_item_sequence_thread(required_effects, items_data, optimize_for, start_
                 time.time() - start_state.start_time
             ))
 
-        # If current effects already contain all required effects:
-        if required_set.issubset(current_effects):
-            # Calculate profit for each base product
+        # Accept as solution if the required effects are met and we're at or above min_depth
+        # (If no effects are selected, require that the recipe contains at least one item.)
+        if required_set.issubset(current_effects) and (required_set or path) and len(path) >= min_depth:
+            # Calculate profit for each base product.
             profits = {
                 product: calculate_final_price(product, current_effects) - cost
                 for product in BASE_PRICES
@@ -171,7 +169,7 @@ def find_item_sequence_thread(required_effects, items_data, optimize_for, start_
             best_product = max(profits.items(), key=lambda x: x[1])[0]
             profit = profits[best_product]
             
-            # Update best solution based on optimization criteria
+            # Update best solution based on optimization criteria.
             with start_state.lock:
                 if optimize_for == "cost" and cost < start_state.best_value:
                     start_state.best_solution = (path, current_effects, cost, profit)
@@ -179,13 +177,17 @@ def find_item_sequence_thread(required_effects, items_data, optimize_for, start_
                 elif optimize_for == "profit" and profit > start_state.best_value:
                     start_state.best_solution = (path, current_effects, cost, profit)
                     start_state.best_value = profit
-            continue
+            
+            # In cost mode, prune further exploration since any extension will only increase cost.
+            # For profit mode, we want to continue expanding to potentially reach a higher profit.
+            if optimize_for == "cost":
+                continue
 
-        # Skip if we've exceeded max depth
+        # Skip if we've exceeded max depth.
         if len(path) >= max_depth:
             continue
 
-        # Otherwise, expand by applying each item
+        # Otherwise, expand by applying each item.
         for item_name in items_data:
             next_effects = apply_item(current_effects, item_name, items_data)
             next_fset = frozenset(next_effects)
@@ -196,18 +198,19 @@ def find_item_sequence_thread(required_effects, items_data, optimize_for, start_
                     next_cost = cost + INGREDIENT_PRICES[item_name]
                     queue.append((next_fset, path + [item_name], next_cost))
 
-def find_item_sequence(required_effects, items_data, optimize_for="cost", progress_callback=None, timeout=30, max_depth=None):
+def find_item_sequence(required_effects, items_data, optimize_for="cost", progress_callback=None, timeout=30, min_depth=1, max_depth=None):
     """
     Attempts to find a sequence of items that produces all 'required_effects'.
     Can optimize for cost (cheapest) or profit (most profitable).
 
     Args:
-        required_effects: List of effects to achieve
+        required_effects: List of effects to achieve (if empty, any non-empty sequence is considered)
         items_data: Dictionary of item data
         optimize_for: "cost" or "profit"
         progress_callback: Function to call with progress updates (current_depth, states_explored, max_depth, elapsed_time)
         timeout: Maximum time in seconds to search for a solution
-        max_depth: Maximum depth to search (if None, will calculate based on number of effects)
+        min_depth: Minimum number of mixing steps required
+        max_depth: Maximum depth to search
 
     Returns: (list_of_items_used, final_effects_set, cost, profit) or (None, None, None, None) if no solution.
     """
@@ -217,7 +220,7 @@ def find_item_sequence(required_effects, items_data, optimize_for="cost", progre
     search_state.best_value = float('inf') if optimize_for == "cost" else float('-inf')
 
     # Determine number of threads based on available CPU cores
-    num_threads = min(4, len(items_data))  # Use up to 4 threads or number of items, whichever is smaller
+    num_threads = min(4, len(items_data))
 
     # Start threads
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
@@ -229,12 +232,13 @@ def find_item_sequence(required_effects, items_data, optimize_for="cost", progre
                 items_data,
                 optimize_for,
                 search_state,
+                min_depth,
                 max_depth,
                 timeout
             )
             futures.append(future)
 
-        # Process progress updates in the main thread
+        # Process progress updates
         while not all(f.done() for f in futures):
             try:
                 progress = search_state.progress_queue.get(timeout=0.1)
@@ -243,7 +247,7 @@ def find_item_sequence(required_effects, items_data, optimize_for="cost", progre
             except:
                 pass
 
-        # Wait for first solution or timeout
+        # Wait for threads to finish or timeout
         try:
             concurrent.futures.wait(futures, timeout=timeout)
         except concurrent.futures.TimeoutError:
@@ -252,20 +256,24 @@ def find_item_sequence(required_effects, items_data, optimize_for="cost", progre
     return search_state.best_solution if search_state.best_solution else (None, None, None, None)
 
 def main():
-    # Load items from the JSON
+    # Load items from the JSON file
     items_data = load_items("interactions.json")
 
-    # Define the effects you want to achieve
-    desired_effects = ["Tropic Thunder", "Shrinking"]
+    # Define the desired effects.
+    # When empty, the search disregards effect requirements and optimizes solely for cost or profit.
+    desired_effects = []  # Use an empty list to disregard effects requirement
     
-    # Find the sequence of items needed
-    sequence, final, cost, profit = find_item_sequence(desired_effects, items_data, optimize_for="cost")
+    # Find the sequence of items needed (using a maximum step length of 15 here)
+    sequence, final, cost, profit = find_item_sequence(desired_effects, items_data, optimize_for="cost", max_depth=15)
 
     if sequence:
         print("\nTo achieve the following effects:")
-        for effect in desired_effects:
-            print(f"- {effect}")
-        
+        if desired_effects:
+            for effect in desired_effects:
+                print(f"- {effect}")
+        else:
+            print("No specific effects required.")
+
         print("\nUse these items in order:")
         for i, item in enumerate(sequence, 1):
             print(f"{i}. {item} (${INGREDIENT_PRICES[item]})")
@@ -280,8 +288,8 @@ def main():
             final_price = calculate_final_price(product, final)
             print(f"- {product}: ${final_price} (Profit: ${final_price - cost})")
     else:
-        print(f"\nCould not find a sequence of items that produces all desired effects.")
-        print("Check if the desired effects are achievable.")
+        print("\nCould not find a sequence of items that produces the desired outcome.")
+        print("Try increasing the maximum mixing step length or check if the desired effects are achievable.")
 
 if __name__ == "__main__":
     main()
