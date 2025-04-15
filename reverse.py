@@ -100,12 +100,20 @@ def apply_item(current_effects, item_name, items_data):
     """
     new_effects = set(current_effects)
 
-    # 1) Add the item's base effect
+    # Add the item's base effect
     base_effect = items_data[item_name]["base_effect"]
+    
+    # Determine if the base effect was already present.
+    base_already_present = base_effect in new_effects
+    
+    # Add the base effect (if not already there).
     new_effects.add(base_effect)
 
-    # 2) Apply the replacements
-    for (old_e, new_e) in items_data[item_name]["replacements"]:
+    # Apply the replacements.
+    for old_e, new_e in items_data[item_name]["replacements"]:
+        # If the base effect was just added and this replacement targets it, skip.
+        if not base_already_present and old_e == base_effect:
+            continue
         if old_e in new_effects:
             new_effects.remove(old_e)
             new_effects.add(new_e)
