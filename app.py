@@ -14,7 +14,7 @@ st.set_page_config(
 # Title and description
 st.title("Schedule 1 Reverse Recipe Search")
 st.markdown("""
-Find the sequence of items needed to achieve your desired effects or, if no effects are selected, optimize based solely on cost or profit.
+Find the sequence of items needed to achieve your requirements.
 """)
 
 # Load items data
@@ -39,6 +39,14 @@ with st.sidebar:
     selected_effects = st.multiselect(
         "Choose effects",
         sorted(list(all_effects)),
+        default=[]
+    )
+
+    st.header("Available Ingredients")
+    st.markdown("Select specific ingredients to use. Leave empty to allow all ingredients:")
+    selected_ingredients = st.multiselect(
+        "Choose ingredients",
+        sorted(list(items_data.keys())),
         default=[]
     )
 
@@ -73,6 +81,13 @@ if selected_effects:
         st.markdown(f"- {effect}")
 else:
     st.info("No specific effects selected. The search will optimize based solely on cost or profit.")
+    
+if selected_ingredients:
+    st.subheader("Selected Ingredients")
+    for ingredient in selected_ingredients:
+        st.markdown(f"- {ingredient}")
+else:
+    st.info("No specific ingredients selected. The search will allow all ingredients.")
 
 if st.button("Find Recipe"):
     # Progress display
@@ -105,7 +120,8 @@ if st.button("Find Recipe"):
             progress_callback=update_progress,
             timeout=timeout,
             min_depth=min_steps,
-            max_depth=max_steps
+            max_depth=max_steps,
+            allowed_ingredients=selected_ingredients if selected_ingredients else None
         )
 
         # Clear progress display

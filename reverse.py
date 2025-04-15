@@ -125,7 +125,7 @@ def calculate_final_price(base_product, effects):
     total_multiplier = sum(EFFECT_MULTIPLIERS.get(effect, 0) for effect in effects)
     return BASE_PRICES[base_product] * (1 + total_multiplier)
 
-def find_item_sequence_thread(required_effects, items_data, optimize_for, start_state, min_depth, max_depth, timeout):
+def find_item_sequence_thread(required_effects, items_data, optimize_for, start_state, min_depth, max_depth, timeout, allowed_ingredients=None):
     required_set = set(required_effects)
     queue = deque([(frozenset(), [], 0)])
     states_explored = 0
@@ -187,8 +187,8 @@ def find_item_sequence_thread(required_effects, items_data, optimize_for, start_
         if len(path) >= max_depth:
             continue
 
-        # Otherwise, expand by applying each item.
-        for item_name in items_data:
+        # Otherwise, expand by applying each allowed item.
+        for item_name in allowed_ingredients:
             next_effects = apply_item(current_effects, item_name, items_data)
             next_fset = frozenset(next_effects)
             
@@ -198,7 +198,7 @@ def find_item_sequence_thread(required_effects, items_data, optimize_for, start_
                     next_cost = cost + INGREDIENT_PRICES[item_name]
                     queue.append((next_fset, path + [item_name], next_cost))
 
-def find_item_sequence(required_effects, items_data, optimize_for="cost", progress_callback=None, timeout=30, min_depth=1, max_depth=None):
+def find_item_sequence(required_effects, items_data, optimize_for="cost", progress_callback=None, timeout=30, min_depth=1, max_depth=None, allowed_ingredients=None):
     """
     Attempts to find a sequence of items that produces all 'required_effects'.
     Can optimize for cost (cheapest) or profit (most profitable).
@@ -211,6 +211,7 @@ def find_item_sequence(required_effects, items_data, optimize_for="cost", progre
         timeout: Maximum time in seconds to search for a solution
         min_depth: Minimum number of mixing steps required
         max_depth: Maximum depth to search
+        allowed_ingredients: List of ingredient names to allow in the recipe. If None, all ingredients are allowed.
 
     Returns: (list_of_items_used, final_effects_set, cost, profit) or (None, None, None, None) if no solution.
     """
@@ -218,9 +219,13 @@ def find_item_sequence(required_effects, items_data, optimize_for="cost", progre
     # Create shared state
     search_state = SearchState()
     search_state.best_value = float('inf') if optimize_for == "cost" else float('-inf')
+    
+    # If no ingredients are specified, allow all ingredients
+    if allowed_ingredients is None:
+        allowed_ingredients = list(items_data.keys())
 
     # Determine number of threads based on available CPU cores
-    num_threads = min(4, len(items_data))
+    num_threads = min(2, len(items_data))
 
     # Start threads
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
@@ -234,7 +239,8 @@ def find_item_sequence(required_effects, items_data, optimize_for="cost", progre
                 search_state,
                 min_depth,
                 max_depth,
-                timeout
+                timeout,
+                allowed_ingredients
             )
             futures.append(future)
 
