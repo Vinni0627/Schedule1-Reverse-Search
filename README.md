@@ -21,6 +21,10 @@ You can try out the app instantly in your browser:
 
 👉 https://huggingface.co/spaces/Vinni0627/Schedule1-Reverse-Search
 
+or 
+
+👉 https://schedule1-reverse-search.streamlit.app/
+
 No installation required!
 
 ## Installation (For Local Use)
