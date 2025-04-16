@@ -14,7 +14,7 @@ The project was developed using [Cursor.ai](https://www.cursor.so/).
 
 - Reverse search functionality to identify item sequences based on desired outcomes
 - Focus on either Cheapest Material Cost or Most Profit
-- Control how many mixes
+- Control how many mixing steps
 ## Live Website
 
 You can try out the app instantly in your browser:
